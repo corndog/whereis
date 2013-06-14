@@ -13,6 +13,7 @@ import scala.concurrent._
 import scala.concurrent.duration._
 import akka.actor._
 import akka.actor.ActorSystem
+import akka.routing.RoundRobinRouter
 import akka.pattern.ask
 import akka.util.Timeout
 import reflect.ClassTag
@@ -23,6 +24,7 @@ import spray.http.MediaTypes._
 import spray.httpx.marshalling.Marshaller
 
 import com.whereis.pages.Pages
+import com.whereis.data._
 
 object Main extends App with SimpleRoutingApp {
 	implicit val system = ActorSystem("simple-routing-app")
@@ -42,7 +44,7 @@ object Main extends App with SimpleRoutingApp {
 					println("Location??? " + lat + " : " + lon)
 					respondWithMediaType(`application/xml`) {
 						complete { 
-							(Trakka.workerManager ? ItemsNear(lat, lon, 200)).mapTo[xml.Elem]
+							(Trakka.workerRouter ? ItemsNear(lat, lon, 200)).mapTo[xml.Elem]
 							//ask(Trakka.workerManager, ItemsNear(lat, lon, 200)).mapTo[String]
 							
 							// fail, some marshaller problem..... 

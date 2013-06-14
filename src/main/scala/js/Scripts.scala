@@ -71,7 +71,7 @@ object Scripts {
 		}
 	"""
 
-	
+	// from http://microajax.googlecode.com/svn/trunk/microajax.js
 	val microAjax = """
 	function microAjax(url, callbackFunction) {
 		this.bindFunction = function (caller, object) {

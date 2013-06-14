@@ -1,13 +1,20 @@
-package com.whereis
+package com.whereis.data
 
 import akka.actor._
+import akka.actor.ActorSystem
+import akka.routing.RoundRobinRouter
 
 sealed trait WIMessage
 case class ItemsNear(lat:Double, lon:Double, lag: Int) extends WIMessage
 case class Item(id: Long, lat: Double, lon: Double, lag:Int)
 //case class Items(items:Seq[Item]) extends WIMessage
 
-// lat 40.7610083, lon -73.99970499999999
+// NE 40.79691751, -73.9323234   -- 86th ish
+// NW 40.80991152, -73.9651107
+// SW 40.74790721, -74.0064811     -- 23rd ish
+// SE 40.73594165, -73.9759254
+
+// lat 40.7610083, lon -73.99970499999999 me
 
 class ItemsWorker extends Actor {
 
@@ -33,9 +40,12 @@ class ItemsWorker extends Actor {
 }
 
 object Trakka {
-	
+	val numberOfWorkers = 8
 	implicit val system = ActorSystem("WISystem")
-	val workerManager = system.actorOf(Props[ItemsWorker], name = "workerManager")
+	//val workerManager = system.actorOf(Props[ItemsWorker], name = "workerManager")
+	val workerRouter = system.actorOf(
+			Props[ItemsWorker].withRouter(RoundRobinRouter(numberOfWorkers)), 
+			name = "workerRouter")
 
 }
 
