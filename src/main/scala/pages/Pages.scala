@@ -19,8 +19,8 @@ object Pages {
 				<meta charset="utf-8"></meta>
 				<style>{xml.Text(styles)}</style>
 				<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false"></script>
-				<script>{xml.Text(Scripts.microAjax)}</script>
-				<script>{xml.Text(Scripts.initMap)}</script>	
+				<script>{xml.Unparsed(Scripts.microAjax)}</script>
+				<script>{xml.Unparsed(Scripts.initMap)}</script>	
 			</head>
 			<body>
 				<div>

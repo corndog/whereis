@@ -1,11 +1,18 @@
 package com.whereis.data
 
+import scala.xml._
+import scala.concurrent.duration._
 import akka.actor._
-import akka.actor.ActorSystem
 import akka.routing.RoundRobinRouter
 
+import com.top10.redis._
+
+import com.whereis.data.redis.RedisData
+
 sealed trait FakeDataMessage
-case object WhereAreYou extends FakeDataMessage
+case object StartAll extends FakeDataMessage
+case object Move extends FakeDataMessage
+case object MoveAll extends FakeDataMessage
 case class Start(lat: Double, lon: Double, speed: Int, id: Int) extends FakeDataMessage
 case class Located(id: Long, lat: Double, lon: Double, lag: Int)
 
@@ -31,15 +38,27 @@ object Consts {
 
 
 class TransportActor extends Actor {
+	import Consts._
 
 	var id = 0
 	var lat = 0.0
 	var lon = 0.0
 	var speed = 0
+	def latStep = speed * latUnit / 100
+	def lonStep = speed * lonUnit / 100
+	
+	def move = {
+		lat += latStep
+		lon += lonStep
+	}
+	
+	def strLoc = <item id={id.toString}><lat>{lat}</lat><lon>{lon}</lon></item>
 	
 	def receive = { 
-		case WhereAreYou => {
-			// move it a bit then return location
+		case Move => {
+			// move it a bit, save to redis
+			move
+			RedisData.redisClt.lpush(RedisData.listName, strLoc.toString)
 		}
 	
 		case Start(lt, ln, spd, i) => {
@@ -47,22 +66,47 @@ class TransportActor extends Actor {
 			lon = ln
 			speed = spd
 			id = i
-			sender ! "ok"
 		}
 	}
 }
 
-object Producer {
+class DataController extends Actor {
+	import Consts._
+	val rn = new scala.util.Random
+
+	val transportRouter = context.actorOf(
+			Props[TransportActor].withRouter(RoundRobinRouter(numberOfWorkers)), 
+			name = "transportRouter")
+			
+	def receive =  {
+		case StartAll => {
+		println("START FAKE DATA")
+		for (i <- 0 until numberOfWorkers) 
+			transportRouter ! Start(minLat + rn.nextInt(latRange) * latUnit, minLon + rn.nextInt(lonRange) * lonUnit, i %4, i)
+		}
+		
+		case MoveAll => {
+			println("MOVE ALL")
+			for (i <- 0 until numberOfWorkers)
+				transportRouter ! Move
+		}
+	}
+		
+}
+
+object DataProducer {
 	import Consts._
 	val rn = new scala.util.Random
 	
 	implicit val system = ActorSystem("WIFakeDataSystem")
-	val transportRouter = system.actorOf(
-			Props[TransportActor].withRouter(RoundRobinRouter(numberOfWorkers)), 
-			name = "transportRouter")
+	import system.dispatcher 
+	
+	val transportController = system.actorOf(
+			Props[DataController],
+			name = "transportController")
 			
-	def startTransports = 
-		for (i <- 0 until numberOfWorkers) 
-			transportRouter ! Start(minLat + rn.nextInt(latRange) * latUnit, minLon + rn.nextInt(lonRange) * lonUnit, i %4, i)
-
+	def startTransports =  
+			transportController ! StartAll
+	
+	val cancellable = system.scheduler.schedule(1000 milliseconds, 5000 milliseconds, transportController, MoveAll)
 }

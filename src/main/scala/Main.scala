@@ -31,27 +31,31 @@ object Main extends App with SimpleRoutingApp {
 	implicit val dispatcher = system.dispatcher // provide execution context for futures
 	implicit val timeout = Timeout(5 seconds)
 	
+	val w = DataProducer.startTransports
 	
 	startServer(interface = "localhost", port = 5050) {
 	
 		path("home") { 
 			getHtml( Pages.homePage )
 		} ~
-		path("spot") { 
-			post { 
-				formFields('spot.as[String]) { spot =>
-					val lat :: lon :: Nil = spot.split("S").toList.map(_.toDouble)
-					println("Location??? " + lat + " : " + lon)
+		path("spot") {
+			get {
+				parameters('lat.as[Double], 'lon.as[Double]) { (lat, lon) =>
+					println("GET for location " + lat + " : " + lon)
 					respondWithMediaType(`application/xml`) {
 						complete { 
 							(Trakka.workerRouter ? ItemsNear(lat, lon, 200)).mapTo[xml.Elem]
-							//ask(Trakka.workerManager, ItemsNear(lat, lon, 200)).mapTo[String]
-							
-							// fail, some marshaller problem..... 
-							//its.map{ is =>
-							//	(for (i <- is) yield <item><lat>{i.lat}</lat><lon>{i.lon}</lon></item>)
-							//}
-							//<items>{innerxml}</items>
+						}
+					}
+				}
+			} ~
+			post { 
+				formFields('lat.as[Double], 'lon.as[Double]) { (lat, lon) =>
+					println("POSTED Location??? " + lat + " : " + lon)
+					respondWithMediaType(`application/xml`) {
+						complete { 
+							<xml><resp>ok</resp></xml>
+							//(Trakka.workerRouter ? ItemsNear(lat, lon, 200)).mapTo[xml.Elem]
 						}
 					}
 				}
