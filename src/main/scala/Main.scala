@@ -3,12 +3,7 @@ package com.whereis
 import scala.xml
 
 import akka.dispatch._
-//import scala.concurrent.ExecutionContext
-//import scala.concurrent.Future
-//import scala.concurrent.Await
 import akka.util.Timeout
-//import scala.concurrent.ExecutionContex
-//import scala.concurrent.ExecutionContext
 import scala.concurrent._
 import scala.concurrent.duration._
 import akka.actor._

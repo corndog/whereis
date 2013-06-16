@@ -91,12 +91,11 @@ class DataController extends Actor {
 				transportRouter ! Move
 		}
 	}
-		
+
 }
 
 object DataProducer {
 	import Consts._
-	val rn = new scala.util.Random
 	
 	implicit val system = ActorSystem("WIFakeDataSystem")
 	import system.dispatcher 

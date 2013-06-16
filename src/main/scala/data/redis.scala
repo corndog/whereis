@@ -1,4 +1,3 @@
-// redis
 package com.whereis.data.redis
 
 import scala.io.Source
@@ -17,7 +16,5 @@ object RedisData {
 
 	val listName = "items"
 	val redisClt = new SingleRedis("localhost", 6379)
-	
-	redisClt.lpush("cat", "9")
 
 }
