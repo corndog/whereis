@@ -1,7 +1,5 @@
 package com.whereis
 
-import scala.xml
-
 import akka.dispatch._
 import akka.util.Timeout
 import scala.concurrent._
@@ -66,23 +64,6 @@ object Main extends App with SimpleRoutingApp {
 						</body>
 					</html>
 					}
-				}
-			}
-		} ~
-		path("things") {
-			getHtml( 
-				<html><body>
-					<div>You GOT THINGS?</div>
-					<form action="/things" method="POST">
-						THING ? : <input type="text" name="thing"></input>
-						<input type="submit" value="DO IT"></input>
-					</form>
-					</body></html>
-			) ~
-			post { 
-				formFields('thing.as[String]) { thing =>
-					println("NICE THING " + thing)
-					redirect("/things")
 				}
 			}
 		}
