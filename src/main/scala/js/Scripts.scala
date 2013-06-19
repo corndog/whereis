@@ -5,7 +5,7 @@ object Scripts {
 
 	val initMap = """
 		NodeList.prototype.forEach = Array.prototype.forEach;
-		var transmitIntervalId, receiveIntervalId;
+		var shouldTransmit = false, transmitId, receiveId;
 		var transmitFreq = 5000, receiveFreq = 5000; // milliseconds
 		var markers = [], map;
 		
@@ -28,7 +28,7 @@ object Scripts {
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 			};
 			map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-			receiveIntervalId = setInterval(receive, 5000);
+			receive();
 			
 			// not necessary
 			google.maps.event.addListener(map, 'click', function(event) {
@@ -69,18 +69,25 @@ object Scripts {
 			var lat = encodeURIComponent(position.coords.latitude);
 			var lon = encodeURIComponent(position.coords.longitude);
 			var url = '/spot?lat=' + lat + '&lon=' + lon;
-			microAjax(url, handleNearbyItems); // get
+			microAjax(url, handleNearbyItems); // GET
 		}
 		function receive() { 
 			navigator.geolocation.getCurrentPosition(fetchItems, noLocation);
+			receiveId = setTimeout(receive, receiveFreq);
 		}
 		function transmit() {
-			// assume we are moving ;)
-			navigator.geolocation.getCurrentPosition(send, noLocation);
+			if (shouldTransmit) {
+				navigator.geolocation.getCurrentPosition(send, noLocation);
+				transmitId = setTimeout(transmit, transmitFreq);
+			}
 		}
-		function stop() { clearInterval(transmitIntervalId); }
-		function start() { 
-			transmitIntervalId = window.setInterval(transmit, transmitFreq);
+		function stop() { 
+			shouldTransmit = false;
+			clearTimeout(transmitId);  
+		}
+		function start() {
+			shouldTransmit = true;
+			transmit();
 		}
 		google.maps.event.addDomListener(window, 'load', findLocation);
 	"""
