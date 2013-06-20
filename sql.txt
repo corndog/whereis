@@ -1,0 +1,44 @@
+CREATE TABLE test (
+  id BIGSERIAL PRIMARY KEY,
+  lat float,
+  lon float,
+  geom geometry(POINT, 4326)
+);
+
+CREATE INDEX idx_test_geom
+ON test
+USING gist(geom);
+
+// lat 40.7610083, lon -73.99970499999999 me
+INSERT INTO test (lat, lon, geom) values (40.761008,-73.999705, ST_SetSRID( ST_MakePoint(-73.999705, 40.761008), 4326) )
+
+CREATE TABLE agencies (
+	id BIGSERIAL PRIMARY KEY,
+	name VARCHAR(64),
+	code VARCHAR(32)
+ )
+
+ // route id is ID given by the agency, don't trust it will be globally unique
+CREATE TABLE routes (
+	route_id VARCHAR(64),
+	agency_id BIGINT references agencies(id),
+	shortName VARCHAR(16),
+	longName VARCHAR(256),
+	description VARCHAR(256),
+	route_type INTEGER,
+	schedule_url VARCHAR(256),
+	PRIMARY KEY (agency_id, route_id)
+ )
+ 
+ CREATE TABLE stops (
+  stop_id VARCHAR(64),
+  agency_id BIGINT references agencies(id),
+  routes VARCHAR(64)[],
+  code VARCHAR(64), 
+  name VARCHAR(256),
+  direction VARCHAR(16),
+  locationType INTEGER,
+  lat float,
+  lon float,
+  geom geometry(POINT, 4326)
+)
