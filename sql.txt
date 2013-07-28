@@ -22,8 +22,8 @@ CREATE TABLE agencies (
 CREATE TABLE routes (
 	route_id VARCHAR(64),
 	agency_id BIGINT references agencies(id),
-	shortName VARCHAR(16),
-	longName VARCHAR(256),
+	short_name VARCHAR(16),
+	long_name VARCHAR(256),
 	description VARCHAR(256),
 	route_type INTEGER,
 	schedule_url VARCHAR(256),
@@ -33,12 +33,19 @@ CREATE TABLE routes (
  CREATE TABLE stops (
   stop_id VARCHAR(64),
   agency_id BIGINT references agencies(id),
-  routes VARCHAR(64)[],
   code VARCHAR(64), 
   name VARCHAR(256),
   direction VARCHAR(16),
-  locationType INTEGER,
+  location_type INTEGER,
   lat float,
   lon float,
-  geom geometry(POINT, 4326)
+  geom geometry(POINT, 4326),
+  PRIMARY KEY (agency_id, stop_id)
+)
+
+CREATE TABLE routes_at_stops (
+	agency_id BIGINT references agencies(id),
+	stop_id VARCHAR(64),
+	route_id VARCHAR(64),
+	PRIMARY KEY (agency_id, stop_id, route_id)
 )
