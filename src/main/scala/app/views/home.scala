@@ -1,26 +1,16 @@
-// another experiment
-package com.whereis.pages
+package whereis.views
 
-import com.whereis.js.Scripts
-
-object Pages { 
-	val styles = """ 
-		html, body, #map-canvas {
-			margin: 0;
-			padding: 0;
-			height: 100%;
-	} """
-
+object Home {
 	val homePage =
 		<html>
 			<head>
 				<title>Where are you?</title>
 				<meta name="viewport" content="initial-scale=1.0, user-scalable=no"></meta>
 				<meta charset="utf-8"></meta>
-				<style>{xml.Text(styles)}</style>
 				<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false"></script>
-				<script>{xml.Unparsed(Scripts.microAjax)}</script>
-				<script>{xml.Unparsed(Scripts.initMap)}</script>	
+				<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+				<script src="public/javascript/app.js"></script>
+        <link href="/public/css/reset.css" media="all" rel="stylesheet" type="text/css" />
 			</head>
 			<body>
 				<div>
