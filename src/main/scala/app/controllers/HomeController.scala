@@ -25,8 +25,8 @@ trait HomeController extends AppController {
 			path("home") { 
 				html { whereis.views.Home.homePage.mkString }
 			} ~
-			path("spot") {
-				parameters('lat.as[Double], 'lon.as[Double], 'transtype.?) { (lat, lon, transtype) =>
+			path("stops") {
+				parameters('lat.as[Double], 'lon.as[Double], 'radius.?.as[Option[Double], 'transtype.?, ) { (lat, lon, radius, transtype) =>
 					println("GET for location " + lat + " : " + lon + " transport type " + transtype)
 					json {
 						//(Trakka.workerRouter ? ItemsNear(lat, lon, 200)).mapTo[xml.Elem]

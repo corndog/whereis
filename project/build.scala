@@ -5,17 +5,18 @@ object WIBuild extends Build {
   /* Dependencies */
   //val localMavenRepo = "Local Maven Repository" at ""+ Path.userHome + "/.m2/repository"
   val fwbrasilRepo = "fwbrasil.net" at "http://fwbrasil.net/maven/"
+	val rediscalaRepo = "rediscala" at "http://dl.bintray.com/etaty/maven"
 	
 	val typesafeRepo = "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
 	val sonatypeRepo = "Sonatype OSS Releases" at "http://oss.sonatype.org/content/repositories/releases/"
 
-  val activateVersion = "1.6.2"
-  val activateCore = "net.fwbrasil" %% "activate-core" % activateVersion
-  val activateJdbc = "net.fwbrasil" %% "activate-jdbc" % activateVersion
+  //val activateVersion = "1.6.2"
+  //val activateCore = "net.fwbrasil" %% "activate-core" % activateVersion
+  //val activateJdbc = "net.fwbrasil" %% "activate-jdbc" % activateVersion
 
   val postgresql = "org.postgresql" % "postgresql" % "9.3-1100-jdbc41"
 
-  val dijon = "com.github.pathikrit" %% "dijon" % "0.2.3"
+  //val dijon = "com.github.pathikrit" %% "dijon" % "0.2.3"
 
   val akkaV = "2.3.0"
   val sprayV = "1.3.1"
@@ -28,7 +29,10 @@ object WIBuild extends Build {
   val sprayTest = "io.spray"            %   "spray-testkit" % sprayV  % "test"
   val akkaActor = "com.typesafe.akka"   %%  "akka-actor"    % akkaV
   val akkaTest = "com.typesafe.akka"   %%  "akka-testkit"  % akkaV   % "test"
-
+	
+	val slick = "com.typesafe.slick" %% "slick" % "2.1.0"
+	val slf4j = "org.slf4j" % "slf4j-nop" % "1.6.4"
+	
   val jbcrypt = "org.mindrot" % "jbcrypt" % "0.3m"
 
   val jodaTime = "joda-time" % "joda-time" % "2.3"
@@ -39,11 +43,11 @@ object WIBuild extends Build {
     id = "whereis",
     base = file("."),
     settings = Defaults.defaultSettings ++ Seq(
-        libraryDependencies ++= Seq(activateCore, activateJdbc, postgresql, dijon, sprayCaching, sprayJson, sprayCan, sprayRouting, sprayClient, sprayTest, akkaActor, akkaTest, jbcrypt /*, scalaCheck */),
+        libraryDependencies ++= Seq(slick, slf4j, postgresql, sprayCaching, sprayJson, sprayCan, sprayRouting, sprayClient, sprayTest, akkaActor, akkaTest, jbcrypt /*, scalaCheck */),
         organization := "com.whereis",
         scalaVersion := "2.10.3",
         version := "1.0",
-        resolvers ++= Seq(/*localMavenRepo,*/ typesafeRepo, sonatypeRepo, fwbrasilRepo),
+        resolvers ++= Seq(/*localMavenRepo,*/ typesafeRepo, sonatypeRepo, fwbrasilRepo, rediscalaReop),
         scalacOptions ++= Seq("-deprecation", "-feature")
       )
 	)
