@@ -47,7 +47,7 @@ object WIBuild extends Build {
         organization := "com.whereis",
         scalaVersion := "2.10.3",
         version := "1.0",
-        resolvers ++= Seq(/*localMavenRepo,*/ typesafeRepo, sonatypeRepo, fwbrasilRepo, rediscalaReop),
+        resolvers ++= Seq(/*localMavenRepo,*/ typesafeRepo, sonatypeRepo, fwbrasilRepo, rediscalaRepo),
         scalacOptions ++= Seq("-deprecation", "-feature")
       )
 	)

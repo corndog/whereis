@@ -26,6 +26,7 @@
 				//mapTypeId: google.maps.MapTypeId.ROADMAP
 			};
 			map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+      fetchItems(position, 'stops');
 			//receive();
 		}
 		
@@ -33,7 +34,8 @@
 			navigator.geolocation.getCurrentPosition(initialize, noLocation);
 		}
 		
-		function handleNearbyItems(data) {
+    // we have pointType but will worry about that later
+		function displayPoints(data) {
 			console.log(data);
 			clearMarkers();
 			var points = data.points, i, marker, point, id, lat, lon;
@@ -53,15 +55,14 @@
 			var lon = position.coords.longitude;
 			var data = 'lat=' + lat + '&lon=' + lon;
 			console.log('send ' + body);
-			//microAjax('/spot', function(respXML){ console.log(respXML); }, body); // POST by inference
 			$.post('/spot', data).done(function(resp){ console.log(resp);}); 
 		}
 		
-		function fetchItems(position) {
+		function fetchItems(position, pointType) {
 			var lat = encodeURIComponent(position.coords.latitude);
 			var lon = encodeURIComponent(position.coords.longitude);
-			var url = '/spot?lat=' + lat + '&lon=' + lon;
-			$.get(url).done(handleNearbyItems);
+			var url = '/' + pointType + '?lat=' + lat + '&lon=' + lon;
+			$.get(url).done(displayPoints);
 		}
 		
 		function receive() { 
