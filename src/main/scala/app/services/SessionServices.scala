@@ -27,7 +27,7 @@ trait SessionServices {
   //   extension: Option[String] = None)
 
 
-  implicit val akkaSystem = ServicesActorSystem.system
+  implicit val actorSystem = whereis.controllers.Boot.system
 
   //val redisURI = new URI(sys.env("REDISTOGO_URL"))
 
