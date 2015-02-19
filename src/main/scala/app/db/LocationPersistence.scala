@@ -6,7 +6,7 @@ import whereis.services.LocationModels._
 trait LocationPersistence {
 
   Class.forName( "org.postgresql.Driver")
-  ConnectionPool.singleton("jdbc:postgresql:postgis20", "postgres", "0bunyip")
+  ConnectionPool.singleton("jdbc:postgresql:postgis20", "postgres", "0")
 
 	def stopsNear(lat: Double, lon: Double, radius: Double = 0.5): List[Point] = {
     
