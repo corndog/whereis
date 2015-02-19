@@ -44,7 +44,7 @@
 				marker = new google.maps.Marker({
 					position:  new google.maps.LatLng(parseFloat(point.lat), parseFloat(point.lon)),
 					map: map,
-					title: point.id
+					title: point.mref
 				});
 				markers.push(marker);
 			}

@@ -1,7 +1,7 @@
 package whereis.views
 
 object Home {
-	val homePage =
+  val home =
 		<html>
 			<head>
 				<title>Where are you?</title>
@@ -28,5 +28,5 @@ object Home {
 				</div>
 				<div id="map-canvas"></div>
 			</body>
-		</html>
+		</html>.mkString
 }

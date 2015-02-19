@@ -67,11 +67,11 @@ trait AppController extends HttpService {
 
   def layout(x: Seq[xml.Node], title:String): String =
     "<!DOCTYPE html>" ++ 
-    (<html>
+    <html>
       <head>
         <title>{title}</title>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
       </head>
       <body>{x}</body>
-    </html>).mkString
+    </html>.mkString
 }

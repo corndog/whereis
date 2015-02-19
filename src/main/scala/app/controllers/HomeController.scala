@@ -22,6 +22,7 @@ import DefaultJsonProtocol._
 import whereis.services.LocationServices
 import whereis.services.LocationModels._
 import whereis.services.LocationModelsJsonProtocol._
+import whereis.views.Home
 
 trait HomeController extends AppController {
 
@@ -30,7 +31,7 @@ trait HomeController extends AppController {
 	val homeRoutes = { 
 		get {
 			path("home") { 
-				html { whereis.views.Home.homePage.mkString }
+				html { Home.home }
 			} ~
 			path("stops") {
 				parameters('lat.as[Double], 'lon.as[Double], 'radius.?.as[Option[Double]], 'transtype.? ) { (lat, lon, radius, transtype) =>
