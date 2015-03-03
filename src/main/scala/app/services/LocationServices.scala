@@ -9,4 +9,5 @@ trait LocationServices {
 	import lp._
 
 	def findStopsNear(lat: Double, lon: Double, radius: Double = 0.5): List[Point] = stopsNear(lat, lon, radius)
+  def findRoutesForStop(stopCode: String): List[Point] = routesForStop(stopCode)
 }

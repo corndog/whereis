@@ -37,6 +37,9 @@ trait HomeController extends AppController {
 				parameters('lat.as[Double], 'lon.as[Double], 'radius.?.as[Option[Double]], 'transtype.? ) { (lat, lon, radius, transtype) =>
 					complete { Points(ls.findStopsNear(lat, lon, radius.getOrElse(0.5))) }
 				}
+			} ~
+			path("routes" / Segment) { stopCode =>
+				complete { Points(ls.findRoutesForStop(stopCode)) }
 			}
 		}
 	}
